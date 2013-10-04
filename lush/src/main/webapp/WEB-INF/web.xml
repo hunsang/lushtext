@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-
   <!-- spring start-->
   <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>/WEB-INF/spring/root-context.xml</param-value>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath*:spring/context-*.xml</param-value>
   </context-param>
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -14,7 +13,7 @@
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <init-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>/WEB-INF/spring/webServlet/*.xml</param-value>
+      <param-value>/WEB-INF/spring-mvc/context-web.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -22,12 +21,14 @@
     <servlet-name>action</servlet-name>
     <url-pattern>*.lush</url-pattern>
   </servlet-mapping>
-  
- <!-- spring end-->
-   <!-- basic start-->
+  <!-- spring end-->
+  <!-- basic start-->
   <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <login-config>
+        <auth-method>BASIC</auth-method>
+  </login-config>
   <session-config>
         <session-timeout>600</session-timeout>
   </session-config>
