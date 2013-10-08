@@ -1,0 +1,105 @@
+package lush.login.web;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lush.login.service.LoginService;
+import lush.login.service.LoginVO;
+import lush.xyz.service.LushCityManager;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import lush.com.MessageSource;
+
+/**
+ * @author Administrator
+ *
+ */
+@Controller
+public class LoginController {
+
+	/** LoginService */
+	@Resource(name = "loginService")
+	private LoginService loginService;
+
+	/** MessageSource */
+	@Resource(name="messageSource")
+	MessageSource messageSource;
+
+	/**
+	 * @param loginVO
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/com/login/LoginUsr.do")
+	public String loginUsrView(@ModelAttribute("loginVO") LoginVO loginVO,	HttpServletRequest request,	HttpServletResponse response,ModelMap model) 
+			throws Exception {
+		return "com/login/LoginUsr";
+	}
+
+	/**
+	 * @param loginVO
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/com/login/actionLogin.do")
+	public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO,HttpServletRequest request,ModelMap model)
+			throws Exception {
+
+		LoginVO resultVO = loginService.actionLogin(loginVO);
+		boolean loginPolicyYn = true;
+
+		if (resultVO != null && resultVO.getEmail() != null && !resultVO.getEmail().equals("") && loginPolicyYn) {
+			request.getSession().setAttribute("LoginVO", resultVO);
+			return "forward:/cmm/main/mainPage.do";
+		} else {
+
+			return "com/login/LoginUsr";
+		}
+
+	}    
+//	/**
+//	 * @param model
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value="/uat/uia/actionMain.do")
+//	public String actionMain(ModelMap model) 
+//			throws Exception {
+//
+//		// 1. Spring Security 사용자권한 처리
+//		Boolean isAuthenticated = UserDetailsHelper.isAuthenticated();
+//		if(!isAuthenticated) {
+//			model.addAttribute("message", messageSource.getMessage("fail.common.login"));
+//			return "cmm/uat/uia/EgovLoginUsr";
+//		}
+//
+//		// 2. 메인 페이지 이동
+//		return "forward:/cmm/main/mainPage.do";
+//	}
+//	/**
+//	 * @param request
+//	 * @param model
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	@RequestMapping(value="/uat/uia/actionLogout.do")
+//	public String actionLogout(HttpServletRequest request, ModelMap model) 
+//			throws Exception {
+//		try {
+//			UserDetailsHelper.getRequestAttributes().removeAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+//		} catch (Exception e) {
+//			leaveaTrace.trace("fail.common.msg", this.getClass());
+//		}
+//		return "forward:/cmm/main/mainPage.do"; 
+//	}
+}
